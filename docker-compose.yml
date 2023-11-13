@@ -1,20 +1,83 @@
-version: "3"
+# version: "3"
+
+# services:
+#   db:
+#     image: mysql:latest
+#     environment:
+#       MYSQL_ROOT_PASSWORD: "12345"
+#       MYSQL_DATABASE: "airtribe"
+#       MYSQL_USER: "airtribe"
+#       MYSQL_PASSWORD: "12345"
+#     ports:
+#       - "3306:3306"
+
+#   phpmyadmin:
+#     image: phpmyadmin/phpmyadmin
+#     environment:
+#       PMA_HOST: db
+#       PMA_PORT:
+#     ports:
+#       - "8081:80"
+# version: "3"
+
+# services:
+#   mysqldb:
+#     image: mysql
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: "12345"
+#       MYSQL_DATABASE: "airtribe"
+#     ports:
+#       - 3006:3006
+#     volumes:
+#       - db-config:/etc/mysql
+#       - db-data:/var/lib/mysql
+#       - ./db/backup/files/:/data_backup/data
+#   app:
+#     build:
+#       context: .
+#       dockerfile: ./dockerfile
+#     image: "airtribev4.0"
+#     depends_on:
+#       - mysqldb
+#     stdin_open: true
+#     tty: true
+
+# volumes:
+#   db-config:
+#   db-data:
+version: "3.8"
 
 services:
-  db:
-    image: mysql:latest
+  mysqldb:
+    image: mysql
+    restart: always
+    env_file: ./.env
     environment:
-      MYSQL_ROOT_PASSWORD: "12345"
-      MYSQL_DATABASE: "airtribe"
-      MYSQL_USER: "airtribe"
-      MYSQL_PASSWORD: "12345"
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
     ports:
-      - "3307:3306"
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    volumes:
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+      - ./db/backup/files/:/data_backup/data
+  app:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    image: node-mysql-app
+    env_file: ./.env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    volumes:
+      - ./app:/app
+      - app/node_modules
+    depends_on:
+      - mysqldb
+    stdin_open: true
+    tty: true
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      PMA_HOST: db
-      PMA_PORT:
-    ports:
-      - "8081:80"
+volumes:
+  db-config:
+  db-data:

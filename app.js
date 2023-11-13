@@ -4,7 +4,7 @@ const tablesRouter = require("./tables");
 const coursesRouter = require("./courses");
 const registrationRouter = require("./registration");
 const leadsRouter = require("./leads");
-
+require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
