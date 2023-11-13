@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_DATABASE: "airtribe"
+      MYSQL_USER: "airtribe"
+      MYSQL_PASSWORD: "12345"
+    ports:
+      - "3307:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT:
+    ports:
+      - "8081:80"
