@@ -44,5 +44,5 @@ run the following command in your terminal:
  after that execute the command:-
 
 3. docker run -p 3001:3001 -d image_name
-4. 
+
  this command runs a Docker container in the background, mapping port 3001 on the host to port 3001 in the container.
